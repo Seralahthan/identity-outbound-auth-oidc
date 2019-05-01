@@ -57,6 +57,8 @@ import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,16 +68,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class OpenIDConnectAuthenticator extends AbstractApplicationAuthenticator
         implements FederatedApplicationAuthenticator {
@@ -397,6 +392,9 @@ public class OpenIDConnectAuthenticator extends AbstractApplicationAuthenticator
 
                 String authenticatedUserId = getAuthenticatedUserId(context, oAuthResponse, jsonObject);
                 String attributeSeparator = getMultiAttributeSeparator(context, authenticatedUserId);
+
+                jsonObject.put("http://wso2.org/claims/idtoken", idToken);
+                jsonObject.put("http://wso2.org/claims/accesstoken", accessToken);
 
                 for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
                     buildClaimMappings(claims, entry, attributeSeparator);
