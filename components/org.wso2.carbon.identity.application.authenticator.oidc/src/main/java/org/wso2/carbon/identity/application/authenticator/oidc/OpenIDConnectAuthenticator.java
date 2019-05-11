@@ -393,6 +393,10 @@ public class OpenIDConnectAuthenticator extends AbstractApplicationAuthenticator
                 String authenticatedUserId = getAuthenticatedUserId(context, oAuthResponse, jsonObject);
                 String attributeSeparator = getMultiAttributeSeparator(context, authenticatedUserId);
 
+                if (log.isDebugEnabled()){
+                    log.debug("idToken retrieved from the federated authenticator:" + idToken);
+                    log.debug("accessToken retrieved from the federated authenticator:" + accessToken);
+                }
                 jsonObject.put("http://wso2.org/claims/idtoken", idToken);
                 jsonObject.put("http://wso2.org/claims/accesstoken", accessToken);
 
