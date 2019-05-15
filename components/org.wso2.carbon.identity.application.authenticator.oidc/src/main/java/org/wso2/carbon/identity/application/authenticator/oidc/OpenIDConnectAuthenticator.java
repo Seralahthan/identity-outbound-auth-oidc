@@ -397,8 +397,9 @@ public class OpenIDConnectAuthenticator extends AbstractApplicationAuthenticator
                     log.debug("idToken retrieved from the federated authenticator:" + idToken);
                     log.debug("accessToken retrieved from the federated authenticator:" + accessToken);
                 }
-                jsonObject.put("http://wso2.org/claims/idtoken", idToken);
-                jsonObject.put("http://wso2.org/claims/accesstoken", accessToken);
+
+                jsonObject.put("fedIDToken", idToken);
+                jsonObject.put("fedAccessToken", accessToken);
 
                 for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
                     buildClaimMappings(claims, entry, attributeSeparator);
@@ -410,6 +411,20 @@ public class OpenIDConnectAuthenticator extends AbstractApplicationAuthenticator
                 if (log.isDebugEnabled()) {
                     log.debug("The IdToken is null");
                 }
+
+                if (log.isDebugEnabled()){
+                    log.debug("accessToken retrieved from the federated authenticator:" + accessToken);
+                }
+
+                String attributeSeparator =
+                        getMultiAttributeSeparator(context, getAuthenticateUser(context, jsonObject, oAuthResponse));
+
+                jsonObject.put("fedAccessToken", accessToken);
+
+                for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+                    buildClaimMappings(claims, entry, attributeSeparator);
+                }
+
                 authenticatedUser = AuthenticatedUser.createFederateAuthenticatedUserFromSubjectIdentifier(
                         getAuthenticateUser(context, jsonObject, oAuthResponse));
             }
